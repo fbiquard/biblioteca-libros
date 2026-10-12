@@ -59,6 +59,61 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 @media (max-width:720px){.hero{grid-template-columns:1fr;gap:18px}.hero-deck{align-self:start}}
 @media (max-width:560px){.grid{grid-template-columns:1fr}.mast-top .hide-s{display:none}}
 
+
+/* ---------- SHELF / COVERS ---------- */
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));column-gap:clamp(22px,3.5vw,40px);row-gap:40px;padding:30px 0 20px;align-items:end}
+.book{position:relative;cursor:pointer;perspective:900px}
+.book::after{display:none;content:"";position:absolute;left:calc(-1 * clamp(11px,1.75vw,20px));right:calc(-1 * clamp(11px,1.75vw,20px));bottom:-16px;height:12px;background:linear-gradient(var(--plank1),var(--plank2));box-shadow:0 8px 12px -6px rgba(0,0,0,.35);z-index:0}
+:root{--plank1:#c9b48e;--plank2:#a8916a}
+[data-theme="sepia"]{--plank1:#b99d6c;--plank2:#957a4c}
+[data-theme="oscuro"]{--plank1:#3a3128;--plank2:#2a231c}
+.cover{position:relative;z-index:1;aspect-ratio:2/3;border-radius:2px 5px 5px 2px;overflow:hidden;color:#f4ecdc;font-family:var(--serif);
+  box-shadow:0 1px 1px rgba(0,0,0,.2),6px 10px 18px -6px rgba(0,0,0,.45);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;transform-origin:left center;container-type:inline-size}
+.cover::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.35) 0,rgba(255,255,255,.12) 3%,rgba(0,0,0,.08) 6%,transparent 12%);z-index:3;pointer-events:none}
+.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.10),transparent 40%,rgba(0,0,0,.18));z-index:3;pointer-events:none}
+@media (hover:hover){.book:hover .cover{transform:rotateY(-14deg) translateY(-4px);box-shadow:14px 16px 26px -8px rgba(0,0,0,.5)}}
+.book:active .cover{transform:scale(.97)}
+.cv{position:absolute;inset:0;display:flex;flex-direction:column;z-index:2}
+.cv .t{font-weight:600;line-height:1.08;letter-spacing:-.01em}
+.cv .a{font-family:var(--sans);font-size:max(8px,5.6cqw);letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+.cv .k{font-family:var(--sans);font-size:max(7px,4.6cqw);letter-spacing:.2em;text-transform:uppercase;opacity:.7}
+.cv .e{line-height:1}
+.cv .pub{font-family:var(--serif);font-style:italic;font-size:max(7px,5cqw);opacity:.6}
+/* A: clásica con marco */
+.cv-a{padding:9cqw;text-align:center;justify-content:space-between}
+.cv-a .frame{position:absolute;inset:5cqw;border:1px solid rgba(244,236,220,.55);outline:1px solid rgba(244,236,220,.25);outline-offset:-3.5cqw}
+.cv-a .t{font-size:11cqw;margin:4cqw 0}
+.cv-a .e{font-size:20cqw}
+/* B: banda clara inferior */
+.cv-b{justify-content:flex-end}
+.cv-b .top{flex:1;display:flex;align-items:center;justify-content:center;font-size:30cqw}
+.cv-b .band{background:#f4ecdc;color:#1d1b18;padding:7cqw 8cqw 8cqw}
+.cv-b .t{font-size:10.5cqw}
+.cv-b .a{opacity:.7;margin-top:3cqw;display:block}
+/* C: tipográfica */
+.cv-c{padding:10cqw 9cqw;justify-content:space-between}
+.cv-c .t{font-size:13.5cqw;font-style:italic}
+.cv-c .line{width:22cqw;border-top:2px solid currentColor;opacity:.7;margin:5cqw 0}
+.cv-c .e{font-size:16cqw;align-self:flex-end}
+/* D: inicial gigante */
+.cv-d{padding:9cqw;justify-content:flex-end}
+.cv-d .big{position:absolute;top:-8cqw;right:-4cqw;font-size:95cqw;font-weight:700;opacity:.13;line-height:1}
+.cv-d .t{font-size:12cqw;position:relative}
+.cv-d .a{margin-top:4cqw;position:relative}
+.cv-d .e{position:absolute;top:9cqw;left:9cqw;font-size:15cqw}
+.book-meta{margin-top:12px;display:flex;align-items:center;justify-content:space-between;font-family:var(--sans);font-size:12px;color:var(--muted)}
+.pill{background:var(--accent);color:var(--bg);font-weight:700;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:99px}
+.cover.real{aspect-ratio:auto;background:#ddd}
+.cover.real img{display:block;width:100%;height:auto}
+.cover.real::after{background:linear-gradient(160deg,rgba(255,255,255,.06),transparent 40%,rgba(0,0,0,.08))}
+.hero{grid-template-columns:minmax(180px,250px) 1fr;align-items:center}
+.hero .book::after{display:none}
+.hero-text h2{margin:12px 0 16px}
+.hero-text .hero-deck{display:block}
+.a-cover{width:170px;margin:0 auto 34px}
+@media (max-width:720px){.hero{grid-template-columns:150px 1fr;gap:20px}.hero h2{font-size:28px}.hero-text .hero-deck{font-size:16px}}
+@media (max-width:480px){.shelf{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}.hero .book{width:160px;margin:0 auto}}
+
 /* ---------- READER ---------- */
 #reader{display:none}
 body.reading #home{display:none}
@@ -153,7 +208,7 @@ body.reading #reader{display:block}
 
 <div id="stories" hidden>
 <!-- STORY: DAVID -->
-<div id="story-david" data-excerpt="Gladwell sostiene que entendimos al revés la historia del pastor y el gigante. Ventajas que son desventajas, dificultades que se vuelven fuerza y los límites del poder.">
+<div id="story-david" data-cover="#1a1410,#3d2e1f,#6b5233" data-img="https://covers.openlibrary.org/b/id/7276285-L.jpg" data-excerpt="Gladwell sostiene que entendimos al revés la historia del pastor y el gigante. Ventajas que son desventajas, dificultades que se vuelven fuerza y los límites del poder.">
 <div class="reader-cat">📘 Resumen de libro</div>
 <h1 class="reader-title">David y Goliat: el arte de pelear contra gigantes</h1>
 <div class="reader-date">Malcolm Gladwell · 2013 · Resumido el 12 de octubre, 2026</div>
@@ -297,7 +352,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: CLEAN7 -->
-<div id="story-clean7" data-excerpt="El cardiólogo uruguayo Alejandro Junger propone siete días para resetear el cuerpo. Qué tiene de valioso, qué dice la ciencia sobre el detox y cómo usarlo sin caer en promesas.">
+<div id="story-clean7" data-cover="#0f2a14,#1f4d26,#3a7a3f" data-img="https://covers.openlibrary.org/b/id/9261088-L.jpg" data-excerpt="El cardiólogo uruguayo Alejandro Junger propone siete días para resetear el cuerpo. Qué tiene de valioso, qué dice la ciencia sobre el detox y cómo usarlo sin caer en promesas.">
 <div class="reader-cat">📘 Resumen de libro</div>
 <h1 class="reader-title">Clean 7: la semana de detox, entre lo útil y lo que no está probado</h1>
 <div class="reader-date">Alejandro Junger · 2019 · Resumido el 12 de octubre, 2026</div>
@@ -434,7 +489,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: METABOLISMO -->
-<div id="story-metabolismo" data-excerpt="Tres fases, cinco comidas por día y una larga lista de prohibidos. Por qué la gente baja de peso con el plan de Haylie Pomroy, y por qué no es por las razones que dice el libro.">
+<div id="story-metabolismo" data-cover="#2e1205,#5c240a,#a3441a" data-img="https://covers.openlibrary.org/b/id/8123241-L.jpg" data-excerpt="Tres fases, cinco comidas por día y una larga lista de prohibidos. Por qué la gente baja de peso con el plan de Haylie Pomroy, y por qué no es por las razones que dice el libro.">
 <div class="reader-cat">📘 Resumen de libro</div>
 <h1 class="reader-title">La dieta del metabolismo acelerado: comer más para bajar más, ¿en serio?</h1>
 <div class="reader-date">Haylie Pomroy · 2013 · Resumido el 12 de octubre, 2026</div>
@@ -574,7 +629,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: RADICAL -->
-<div id="story-radical" data-excerpt="Kim Scott aprendió en Google que callar una crítica no es bondad sino abandono. El mapa de los cuatro cuadrantes, cómo pedir y dar feedback, y trece accionables para liderar con franqueza.">
+<div id="story-radical" data-cover="#2a0f0a,#5c1f12,#a33a1f" data-img="https://covers.openlibrary.org/b/id/8088432-L.jpg" data-excerpt="Kim Scott aprendió en Google que callar una crítica no es bondad sino abandono. El mapa de los cuatro cuadrantes, cómo pedir y dar feedback, y trece accionables para liderar con franqueza.">
 <div class="reader-cat">📘 Resumen de libro</div>
 <h1 class="reader-title">Radical Candor: importarte de verdad, desafiar de frente</h1>
 <div class="reader-date">Kim Scott · 2017 · Resumido el 12 de octubre, 2026</div>
@@ -724,7 +779,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: NOVENTA -->
-<div id="story-noventa" data-excerpt="Michael Watkins estudió por qué fracasan los líderes en transición. El modelo STARS, las cinco conversaciones con tu jefe y un plan en tres bloques de treinta días.">
+<div id="story-noventa" data-cover="#0a1a2e,#173a5c,#2a5f8f" data-img="https://covers.openlibrary.org/b/id/863960-L.jpg" data-excerpt="Michael Watkins estudió por qué fracasan los líderes en transición. El modelo STARS, las cinco conversaciones con tu jefe y un plan en tres bloques de treinta días.">
 <div class="reader-cat">📘 Resumen de libro</div>
 <h1 class="reader-title">Los primeros 90 días: el manual para no hundirse en un rol nuevo</h1>
 <div class="reader-date">Michael Watkins · 2003, ed. ampliada 2013 · Resumido el 12 de octubre, 2026</div>
@@ -896,7 +951,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: LEGACY -->
-<div id="story-legacy" data-excerpt="Veteranos que barren el vestuario, cabeza azul bajo presión y la camiseta que hay que dejar en un lugar mejor. Las quince lecciones de James Kerr, con sus límites.">
+<div id="story-legacy" data-cover="#050505,#1a1a1a,#3a3a3a" data-img="https://covers.openlibrary.org/b/id/13686823-L.jpg" data-excerpt="Veteranos que barren el vestuario, cabeza azul bajo presión y la camiseta que hay que dejar en un lugar mejor. Las quince lecciones de James Kerr, con sus límites.">
 <div class="reader-cat">📘 Resumen de libro</div>
 <h1 class="reader-title">Legacy: lo que los All Blacks saben sobre el liderazgo</h1>
 <div class="reader-date">James Kerr · 2013 · Resumido el 12 de octubre, 2026</div>
@@ -1045,7 +1100,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: SEMANAS -->
-<div id="story-semanas" data-excerpt="Si vivís hasta los ochenta, tenés unas cuatro mil semanas. Oliver Burkeman, ex adicto a la productividad, explica por qué nunca vas a terminar la lista y por qué eso es una buena noticia.">
+<div id="story-semanas" data-cover="#1e0f2e,#3d1f5c,#5f3a8a" data-img="https://covers.openlibrary.org/b/id/11990973-L.jpg" data-excerpt="Si vivís hasta los ochenta, tenés unas cuatro mil semanas. Oliver Burkeman, ex adicto a la productividad, explica por qué nunca vas a terminar la lista y por qué eso es una buena noticia.">
 <div class="reader-cat">📘 Resumen de libro</div>
 <h1 class="reader-title">Cuatro mil semanas: productividad para mortales</h1>
 <div class="reader-date">Oliver Burkeman · 2021 · Resumido el 12 de octubre, 2026</div>
@@ -1208,7 +1263,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: KAHNEMAN -->
-<div id="story-kahneman" data-excerpt="El Nobel Daniel Kahneman y los atajos que nos engañan: anclaje, aversión a la pérdida, la falacia de la planificación. Qué resistió la crisis de replicación y qué no.">
+<div id="story-kahneman" data-cover="#0d1426,#1c2a4d,#2f4680" data-img="https://covers.openlibrary.org/b/id/13290711-L.jpg" data-excerpt="El Nobel Daniel Kahneman y los atajos que nos engañan: anclaje, aversión a la pérdida, la falacia de la planificación. Qué resistió la crisis de replicación y qué no.">
 <div class="reader-cat">📘 Resumen de libro</div>
 <h1 class="reader-title">Pensar rápido, pensar despacio: las dos mentes que deciden por vos</h1>
 <div class="reader-date">Daniel Kahneman · 2011 · Resumido el 12 de octubre, 2026</div>
@@ -1398,7 +1453,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: OUTLIERS -->
-<div id="story-outliers" data-excerpt="Jugadores de hockey nacidos en enero, los Beatles en Hamburgo y las diez mil horas. Malcolm Gladwell contra el mito del hombre que se hizo solo, y las críticas que recibió.">
+<div id="story-outliers" data-cover="#2e1f05,#5c3d0a,#8f6214" data-img="https://covers.openlibrary.org/b/id/10021591-L.jpg" data-excerpt="Jugadores de hockey nacidos en enero, los Beatles en Hamburgo y las diez mil horas. Malcolm Gladwell contra el mito del hombre que se hizo solo, y las críticas que recibió.">
 <div class="reader-cat">📘 Resumen de libro</div>
 <h1 class="reader-title">Fuera de serie: la historia oculta del éxito</h1>
 <div class="reader-date">Malcolm Gladwell · 2008 · Resumido el 12 de octubre, 2026</div>
@@ -1554,7 +1609,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: STICKY -->
-<div id="story-sticky" data-excerpt="Una leyenda falsa sobre un riñón robado sobrevivió décadas. Los hermanos Heath explican los seis rasgos de las ideas que pegan y cómo usarlos para comunicar lo que importa.">
+<div id="story-sticky" data-cover="#2e2605,#5c4c0a,#8f7514" data-img="https://covers.openlibrary.org/b/id/7004880-L.jpg" data-excerpt="Una leyenda falsa sobre un riñón robado sobrevivió décadas. Los hermanos Heath explican los seis rasgos de las ideas que pegan y cómo usarlos para comunicar lo que importa.">
 <div class="reader-cat">📘 Resumen de libro</div>
 <h1 class="reader-title">Ideas que pegan: por qué algunas sobreviven y otras mueren</h1>
 <div class="reader-date">Chip Heath y Dan Heath · 2007 · Resumido el 12 de octubre, 2026</div>
@@ -1717,7 +1772,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: HABITOS -->
-<div id="story-habitos" data-excerpt="James Clear sostiene que no nos elevamos al nivel de nuestras metas, sino que caemos al nivel de nuestros sistemas. Las ideas centrales, sus límites y trece accionables para empezar mañana.">
+<div id="story-habitos" data-cover="#0a2a1f,#14523a,#1f7a55" data-img="https://covers.openlibrary.org/b/id/12539702-L.jpg" data-excerpt="James Clear sostiene que no nos elevamos al nivel de nuestras metas, sino que caemos al nivel de nuestros sistemas. Las ideas centrales, sus límites y trece accionables para empezar mañana.">
 <div class="reader-cat">📘 Resumen de libro</div>
 <h1 class="reader-title">Hábitos atómicos: la arquitectura invisible de lo que somos</h1>
 <div class="reader-date">James Clear · 2018 · Resumido el 12 de octubre, 2026</div>
@@ -1930,7 +1985,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: GOOGLEPLUS -->
-<div id="story-googleplus" data-excerpt="Google amenazó a todos sus empleados: usen Google+ o pierdan el bono. Falsificaron millones de cuentas. Gastaron mil millones de dólares. Y aún así perdieron. La historia del ego corporativo más costoso del mundo tech.">
+<div id="story-googleplus" data-cover="#0d2b0d,#1a4a1a,#2d7a2d" data-excerpt="Google amenazó a todos sus empleados: usen Google+ o pierdan el bono. Falsificaron millones de cuentas. Gastaron mil millones de dólares. Y aún así perdieron. La historia del ego corporativo más costoso del mundo tech.">
 <div class="reader-cat">⚡ Tecnología</div>
 <h1 class="reader-title">Google+: el fracaso más caro de la historia</h1>
 <div class="reader-date">4 de mayo, 2026</div>
@@ -2009,7 +2064,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: ENRON -->
-<div id="story-enron" data-excerpt="Durante años, Enron fue la empresa más admirada de América. Sus ejecutivos ganaban premios, sus acciones subían sin parar y la prensa los idolatraba. Todo era mentira. La historia de la mayor estafa corporativa del siglo XX.">
+<div id="story-enron" data-cover="#1a0a00,#3d1a00,#7a3500" data-excerpt="Durante años, Enron fue la empresa más admirada de América. Sus ejecutivos ganaban premios, sus acciones subían sin parar y la prensa los idolatraba. Todo era mentira. La historia de la mayor estafa corporativa del siglo XX.">
 <div class="reader-cat">💼 Negocios</div>
 <h1 class="reader-title">Enron: los tipos más listos de la sala</h1>
 <div class="reader-date">4 de mayo, 2026</div>
@@ -2103,7 +2158,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: PANAM -->
-<div id="story-panam" data-excerpt="Pan Am no era solo una aerolínea. Era el símbolo del poderío americano, la promesa del jet age, el sueño de conectar el mundo. Su caída combina terrorismo, política, deuda y mala suerte en proporciones iguales.">
+<div id="story-panam" data-cover="#00102a,#002060,#0040a0" data-excerpt="Pan Am no era solo una aerolínea. Era el símbolo del poderío americano, la promesa del jet age, el sueño de conectar el mundo. Su caída combina terrorismo, política, deuda y mala suerte en proporciones iguales.">
 <div class="reader-cat">🌍 Historia</div>
 <h1 class="reader-title">Pan Am: el fin del cielo más glamoroso del mundo</h1>
 <div class="reader-date">4 de mayo, 2026</div>
@@ -2193,7 +2248,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: TWITTER -->
-<div id="story-twitter" data-excerpt="Cuatro hombres en una empresa. Uno fue borrado de la historia. Otro fue traicionado dos veces. Un tercero sobrevivió a todos. Y el último volvió para incendiar lo que había construido.">
+<div id="story-twitter" data-cover="#0a1628,#0f2a4a,#1a3d6e" data-excerpt="Cuatro hombres en una empresa. Uno fue borrado de la historia. Otro fue traicionado dos veces. Un tercero sobrevivió a todos. Y el último volvió para incendiar lo que había construido.">
 <div class="reader-cat">⚡ Tecnología</div>
 <h1 class="reader-title">Twitter: la guerra de los cuatro fundadores</h1>
 <div class="reader-date">4 de mayo, 2026</div>
@@ -2288,7 +2343,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: PAYPAL -->
-<div id="story-paypal" data-excerpt="De una sola empresa salieron los fundadores de Tesla, LinkedIn, YouTube, Yelp, Palantir y SpaceX. Esta es la historia del grupo más influyente en la historia del emprendimiento tecnológico.">
+<div id="story-paypal" data-cover="#1a0d00,#4a2800,#8a4a00" data-excerpt="De una sola empresa salieron los fundadores de Tesla, LinkedIn, YouTube, Yelp, Palantir y SpaceX. Esta es la historia del grupo más influyente en la historia del emprendimiento tecnológico.">
 <div class="reader-cat">⚡ Tecnología</div>
 <h1 class="reader-title">La PayPal Mafia: el grupo que conquistó Silicon Valley</h1>
 <div class="reader-date">4 de mayo, 2026</div>
@@ -2382,7 +2437,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: MUSICA -->
-<div id="story-musica" data-excerpt="Antes de la palabra escrita, antes de la rueda, antes de casi todo, el ser humano ya hacía música. Un viaje de 40.000 años desde los primeros huesos convertidos en flauta hasta el streaming que hoy lleva cualquier canción al otro lado del mundo en un segundo.">
+<div id="story-musica" data-cover="#1a0a2e,#4a1a6e,#7b2d8b" data-excerpt="Antes de la palabra escrita, antes de la rueda, antes de casi todo, el ser humano ya hacía música. Un viaje de 40.000 años desde los primeros huesos convertidos en flauta hasta el streaming que hoy lleva cualquier canción al otro lado del mundo en un segundo.">
 <div class="reader-cat">🎸 Música</div>
 <h1 class="reader-title">La historia de la música</h1>
 <div class="reader-date">21 de abril, 2026</div>
@@ -2460,7 +2515,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: DEPORTE -->
-<div id="story-deporte" data-excerpt="¿Cuándo exactamente dejó el ser humano de correr para sobrevivir y empezó a correr para ganar? El fascinante relato de cómo el movimiento puro se convirtió en ritual, juego y competencia organizada.">
+<div id="story-deporte" data-cover="#1a3a5c,#2d6a9f,#1a4a7a" data-excerpt="¿Cuándo exactamente dejó el ser humano de correr para sobrevivir y empezó a correr para ganar? El fascinante relato de cómo el movimiento puro se convirtió en ritual, juego y competencia organizada.">
 <div class="reader-cat">🏛️ Historia</div>
 <h1 class="reader-title">El primer deporte: del instinto a la competencia</h1>
 <div class="reader-date">19 de abril, 2026</div>
@@ -2491,7 +2546,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: GASTRONOMIA -->
-<div id="story-gastronomia" data-excerpt="Todo empezó con el fuego. Hace un millón de años, un ancestro nuestro acercó carne cruda a las brasas y cambió para siempre la historia de la humanidad.">
+<div id="story-gastronomia" data-cover="#3d1a0a,#8b3a0f,#c45e1a" data-excerpt="Todo empezó con el fuego. Hace un millón de años, un ancestro nuestro acercó carne cruda a las brasas y cambió para siempre la historia de la humanidad.">
 <div class="reader-cat">🍽️ Cultura</div>
 <h1 class="reader-title">La historia de la gastronomía</h1>
 <div class="reader-date">19 de abril, 2026</div>
@@ -2516,7 +2571,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: CIUDADES -->
-<div id="story-ciudades" data-excerpt="Durante 200.000 años, el ser humano fue nómade. Luego, en un período brevísimo, decidió quedarse quieto. Construyó una casa, luego una calle, luego una ciudad.">
+<div id="story-ciudades" data-cover="#0d1f2d,#1a3a4a,#2d5a6e" data-excerpt="Durante 200.000 años, el ser humano fue nómade. Luego, en un período brevísimo, decidió quedarse quieto. Construyó una casa, luego una calle, luego una ciudad.">
 <div class="reader-cat">🏙️ Civilización</div>
 <h1 class="reader-title">El origen de las ciudades</h1>
 <div class="reader-date">19 de abril, 2026</div>
@@ -2541,7 +2596,7 @@ body.reading #reader{display:block}
 </div>
 
 <!-- STORY: IA -->
-<div id="story-ia" data-excerpt="En junio de 2017, ocho ingenieros de Google publicaron un paper y siguieron con sus vidas. No sabían que acababan de encender la mecha de la mayor transformación tecnológica desde internet.">
+<div id="story-ia" data-cover="#0d0d1f,#1a1a4a,#2d2d8a" data-excerpt="En junio de 2017, ocho ingenieros de Google publicaron un paper y siguieron con sus vidas. No sabían que acababan de encender la mecha de la mayor transformación tecnológica desde internet.">
 <div class="reader-cat">⚡ Tecnología</div>
 <h1 class="reader-title">La revolución que nadie vio venir</h1>
 <div class="reader-date">21 de abril, 2026</div>
@@ -2596,32 +2651,44 @@ const stories=[...document.querySelectorAll('#stories > div[id^="story-"]')].map
   return {id:el.id.slice(6),cat,isBook,title:q('reader-title')?.textContent||'',date,
     author:isBook?date.split('·')[0].trim():'',emoji:q('reader-emoji')?.textContent||'',
     excerpt:el.dataset.excerpt||(body?.querySelector('p')?.textContent||'').slice(0,220),
-    mins:Math.max(1,Math.round(words/230)),body};
+    mins:Math.max(1,Math.round(words/230)),body,colors:(el.dataset.cover||'#2b2622,#4a3f35,#6b5a48').split(','),img:el.dataset.img||''};
 });
 
 function metaLine(s){return s.isBook?`${esc(s.author)} · ${s.mins} min`:`${esc(s.date.split('·')[0])} · ${s.mins} min`}
 function kicker(s){return s.isBook?'Resumen de libro':esc(s.cat)}
 
+function hash(s){let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))|0;return Math.abs(h)}
+function coverHTML(s,i,noImg){
+  if(s.img&&!noImg) return `<div class="cover real"><img src="${s.img}" alt="${esc(s.title)}" onerror="fallbackCover(this,'${s.id}',${i})"></div>`;
+  const [c1,c2,c3]=s.colors; const v='abcd'[(i!=null?i:hash(s.id))%4];
+  const parts=s.title.split(':'); const t=esc(parts[0].trim());
+  const by=esc(s.isBook?s.author:s.cat); const bg=`background:linear-gradient(155deg,${c3},${c2} 55%,${c1})`;
+  let inner='';
+  if(v==='a') inner=`<div class="cv cv-a"><div class="frame"></div><span class="k">${s.isBook?'Resumen':'Historia'}</span><div><div class="t">${t}</div><div class="a">${by}</div></div><div class="e">${s.emoji}</div></div>`;
+  if(v==='b') inner=`<div class="cv cv-b"><div class="top">${s.emoji}</div><div class="band"><div class="t">${t}</div><span class="a">${by}</span></div></div>`;
+  if(v==='c') inner=`<div class="cv cv-c"><div><div class="a">${by}</div><div class="line"></div><div class="t">${t}</div></div><div class="e">${s.emoji}</div></div>`;
+  if(v==='d') inner=`<div class="cv cv-d"><div class="big">${t.charAt(0)}</div><div class="e">${s.emoji}</div><div class="t">${t}</div><div class="a">${by}</div></div>`;
+  return `<div class="cover" style="${bg}">${inner}</div>`;
+}
+function fallbackCover(img,id,i){const s=stories.find(x=>x.id===id);img.closest('.cover').outerHTML=coverHTML(s,i,true)}
 function renderHome(){
   const d=new Date();
   document.getElementById('today').textContent=d.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   document.getElementById('edition').textContent=`${stories.length} lecturas`;
-  const [first,...rest]=stories;
+  const idx=s=>stories.indexOf(s);
+  const [first]=stories;
   document.getElementById('hero').innerHTML=`
     <div class="hero" onclick="openStory('${first.id}')">
-      <div><span class="kicker">Lo último · ${kicker(first)}</span><h2>${esc(first.title)}</h2></div>
-      <div class="hero-deck"><div class="hero-orn">${first.emoji}</div>${esc(first.excerpt)}<span class="meta">${metaLine(first)}</span></div>
+      <div class="book">${coverHTML(first,idx(first))}</div>
+      <div class="hero-text"><span class="kicker">Lo último · ${kicker(first)}</span><h2>${esc(first.title)}</h2>
+        <span class="hero-deck">${esc(first.excerpt)}<span class="meta">${metaLine(first)}</span></span></div>
     </div>`;
-  const groups=[['Resúmenes de libros',rest.filter(s=>s.isBook)],['Historias',rest.filter(s=>!s.isBook)]];
+  const groups=[['Resúmenes de libros',stories.filter(s=>s.isBook)],['Historias',stories.filter(s=>!s.isBook)]];
   document.getElementById('sections').innerHTML=groups.filter(g=>g[1].length).map(([name,list])=>`
     <div class="section-head"><h3>${name}</h3><span class="meta">${list.length}</span></div>
-    <div class="grid">${list.map(s=>`
-      <div class="item" onclick="openStory('${s.id}')">
-        <span class="kicker">${s.isBook?esc(s.author):esc(s.cat)}</span>
-        <h4>${esc(s.title)}</h4>
-        <p>${esc(s.excerpt)}</p>
-        <span class="meta">${s.mins} min de lectura</span>
-      </div>`).join('')}</div>`).join('');
+    <div class="shelf">${list.map(s=>`
+      <div class="book" onclick="openStory('${s.id}')" title="${esc(s.title)}">${coverHTML(s,idx(s))}
+        <div class="book-meta"><span class="pill">${s.isBook?'Resumen':esc(s.cat)}</span><span>${s.mins} min</span></div></div>`).join('')}</div>`).join('');
 }
 
 let homeScroll=0;
@@ -2633,12 +2700,13 @@ function renderStory(id){
   const s=stories[i], nx=stories[(i+1)%stories.length];
   document.getElementById('article').innerHTML=`
     <header class="a-head">
+      <div class="a-cover">${coverHTML(s,i)}</div>
       <span class="kicker">${kicker(s)}</span>
       <h1>${esc(s.title)}</h1>
       <p class="a-deck">${esc(s.excerpt)}</p>
       <p class="meta a-byline">${esc(s.date)} · ${s.mins} min de lectura</p>
     </header>
-    <div class="a-orn">✦ ✦ ✦</div>
+    
     <div class="a-body">${s.body.innerHTML}</div>
     <div class="next" onclick="openStory('${nx.id}')">
       <span class="kicker">Seguir leyendo</span><h4>${esc(nx.title)}</h4>
