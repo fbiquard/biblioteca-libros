@@ -145,6 +145,30 @@ body.reading #reader{display:block}
 .next h4{font-size:28px;line-height:1.15;font-weight:600;margin-top:8px}
 .next:hover h4{color:var(--accent)}
 
+
+/* ---------- PAGED MODE ---------- */
+#pager{position:relative}
+.pfoot{display:none}
+body.paged.reading{overflow:hidden;height:100%}
+body.paged.reading .rbar{position:fixed;left:0;right:0;top:0}
+body.paged.reading .rbar-title{opacity:1}
+body.paged.reading #progress{display:none}
+body.paged.reading #pager{position:fixed;left:0;right:0;top:var(--rbarH,60px);bottom:calc(46px + env(safe-area-inset-bottom,0px));overflow:hidden;touch-action:pan-y}
+body.paged .article{max-width:none;margin:0;height:100%;column-fill:auto;padding-top:26px;padding-bottom:6px;transition:transform .38s cubic-bezier(.25,.8,.25,1);will-change:transform}
+body.paged .article.nojump{transition:none}
+body.paged .a-head{margin-bottom:28px}
+body.paged .a-head h1{font-size:clamp(30px,4.2vw,46px)}
+body.paged .a-cover{width:150px;margin-bottom:24px}
+body.paged .a-body h2{break-after:avoid}
+body.paged .a-body blockquote,body.paged .a-cover,body.paged .next{break-inside:avoid}
+body.paged .next{margin-top:40px}
+body.paged.reading .pfoot{display:flex;position:fixed;left:0;right:0;bottom:0;height:calc(46px + env(safe-area-inset-bottom,0px));padding:0 clamp(20px,4vw,48px) env(safe-area-inset-bottom,0px);align-items:center;gap:16px;font-family:var(--sans);font-size:12px;color:var(--muted);background:var(--bg)}
+.pbar{flex:1;height:3px;background:var(--rule);border-radius:3px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.modes{display:flex;border:1px solid var(--rule);border-radius:10px;margin-bottom:16px;overflow:hidden}
+.modes button{flex:1;padding:9px 0;font-size:13px}
+.modes button.on{background:var(--accent);color:var(--bg)}
+
 /* ---------- SETTINGS ---------- */
 .panel{position:fixed;right:clamp(16px,4vw,40px);top:calc(env(safe-area-inset-top,0px) + 58px);z-index:70;background:var(--paper);border:1px solid var(--rule);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.18);padding:16px;width:260px;display:none;font-family:var(--sans)}
 .panel.open{display:block}
@@ -189,10 +213,13 @@ body.reading #reader{display:block}
       <button class="icon-btn" onclick="togglePanel(event)" aria-label="Ajustes de lectura">Aa</button>
     </div>
   </div>
-  <article class="article" id="article"></article>
+  <div id="pager"><article class="article" id="article"></article></div>
+  <div class="pfoot" id="pfoot"><span id="pnum"></span><div class="pbar"><i id="pfill"></i></div><span id="pleft"></span></div>
 </section>
 
 <div class="panel" id="panel" onclick="event.stopPropagation()">
+  <label>Lectura</label>
+  <div class="modes"><button data-m="paged" onclick="setMode('paged')">Páginas</button><button data-m="scroll" onclick="setMode('scroll')">Scroll</button></div>
   <label>Tamaño de letra</label>
   <div class="sizes">
     <button onclick="setSize(-1)" style="font-size:14px">A</button>
@@ -2715,32 +2742,92 @@ function renderStory(id){
   document.getElementById('rbarTitle').textContent=s.title;
   document.title=s.title+' · Mi Biblioteca';
   document.body.classList.add('reading');
-  window.scrollTo(0,0); onScroll();
+  current=s; const saved=+store.get('pos:'+s.id,0);
+  if(mode==='paged'){layout(saved)} else {window.scrollTo(0,0);requestAnimationFrame(()=>{const h=document.documentElement.scrollHeight-innerHeight;window.scrollTo(0,saved*h);onScroll()})}
 }
 function showHome(){
+  current=null;resetLayout();
   document.body.classList.remove('reading');document.title='Mi Biblioteca';
   document.getElementById('progress').style.width=0;
   window.scrollTo(0,homeScroll);
 }
 function route(){const id=decodeURIComponent(location.hash.slice(1)); id?renderStory(id):showHome()}
 
+let current=null, mode=store.get('mode','paged'), page=0, pages=1, saveT;
+function savePos(f){if(!current)return;clearTimeout(saveT);saveT=setTimeout(()=>store.set('pos:'+current.id,f.toFixed(4)),200)}
+function resetLayout(){const a=document.getElementById('article');a.style.cssText='';}
+function layout(frac){
+  const a=document.getElementById('article'), pager=document.getElementById('pager'), rb=document.getElementById('rbar');
+  document.documentElement.style.setProperty('--rbarH',rb.offsetHeight+'px');
+  if(frac==null) frac=pages>1?page/(pages-1):0;
+  const W=pager.clientWidth, n=W>=1000?2:1;
+  const g=n===2?Math.max(80,Math.round(W*0.08)):2*Math.max(26,Math.round((W-680)/2));
+  const colW=Math.floor((W-n*g)/n);
+  a.classList.add('nojump');
+  a.style.width=W+'px'; a.style.paddingLeft=a.style.paddingRight=(g/2)+'px';
+  a.style.columnWidth=colW+'px'; a.style.columnGap=g+'px'; a.style.transform='translateX(0)';
+  pages=Math.max(1,Math.ceil((a.scrollWidth-2)/W));
+  page=Math.min(pages-1,Math.max(0,Math.round(frac*(pages-1))));
+  goPage(page,true);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>a.classList.remove('nojump')));
+}
+function goPage(p,instant){
+  if(mode!=='paged'||!current)return;
+  page=Math.min(pages-1,Math.max(0,p));
+  const a=document.getElementById('article'), W=document.getElementById('pager').clientWidth;
+  if(instant)a.classList.add('nojump');
+  a.style.transform=`translateX(${-page*W}px)`;
+  document.getElementById('pnum').textContent=`Página ${page+1} de ${pages}`;
+  document.getElementById('pfill').style.width=(pages>1?page/(pages-1)*100:100)+'%';
+  const left=Math.max(0,Math.round(current.mins*(pages-1-page)/Math.max(1,pages-1)));
+  document.getElementById('pleft').textContent=page===pages-1?'Fin':`${left} min restantes`;
+  savePos(pages>1?page/(pages-1):0);
+}
+function setMode(m){
+  const frac=current?(mode==='paged'?(pages>1?page/(pages-1):0):(()=>{const h=document.documentElement.scrollHeight-innerHeight;return h>0?scrollY/h:0})()):0;
+  mode=m;store.set('mode',m);document.body.classList.toggle('paged',m==='paged');
+  document.querySelectorAll('.modes button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+  if(!current)return;
+  if(m==='paged'){layout(frac)}else{resetLayout();requestAnimationFrame(()=>{const h=document.documentElement.scrollHeight-innerHeight;window.scrollTo(0,frac*h);onScroll()})}
+}
+document.getElementById('pager').addEventListener('click',e=>{
+  if(mode!=='paged'||e.target.closest('.next,a,button'))return;
+  if(getSelection().toString())return;
+  const x=e.clientX/innerWidth; x<0.33?goPage(page-1):goPage(page+1);
+});
+let tx=null,ty=null;
+document.getElementById('pager').addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+document.getElementById('pager').addEventListener('touchend',e=>{
+  if(tx===null||mode!=='paged')return; const dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty; tx=null;
+  if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)){e.preventDefault();dx<0?goPage(page+1):goPage(page-1)}
+});
+document.addEventListener('keydown',e=>{
+  if(!current)return;
+  if(e.key==='Escape'){goHome();return}
+  if(mode!=='paged')return;
+  if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();goPage(page+1)}
+  if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();goPage(page-1)}
+});
+let rT;addEventListener('resize',()=>{clearTimeout(rT);rT=setTimeout(()=>{if(current&&mode==='paged')layout()},150)});
+
 function onScroll(){
-  if(!document.body.classList.contains('reading'))return;
+  if(!document.body.classList.contains('reading')||mode==='paged')return;
   const h=document.documentElement.scrollHeight-innerHeight;
   document.getElementById('progress').style.width=(h>0?Math.min(100,scrollY/h*100):0)+'%';
   document.getElementById('rbar').classList.toggle('scrolled',scrollY>260);
+  if(current&&h>0)savePos(scrollY/h);
 }
 
 let sizeIdx=+store.get('fsIdx',2);
 function applySize(){document.documentElement.style.setProperty('--fs',SIZES[sizeIdx]+'px')}
-function setSize(d){sizeIdx=Math.max(0,Math.min(SIZES.length-1,sizeIdx+d));store.set('fsIdx',sizeIdx);applySize()}
+function setSize(d){sizeIdx=Math.max(0,Math.min(SIZES.length-1,sizeIdx+d));store.set('fsIdx',sizeIdx);applySize();if(current&&mode==='paged')layout()}
 function setTheme(t){document.documentElement.dataset.theme=t;store.set('theme',t);
   document.querySelectorAll('.themes button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
   const tc={claro:'#f7f3ea',sepia:'#f1e4c8',oscuro:'#141311'}[t];document.querySelector('meta[name=theme-color]').content=tc}
 function togglePanel(e){e.stopPropagation();document.getElementById('panel').classList.toggle('open')}
 document.addEventListener('click',()=>document.getElementById('panel').classList.remove('open'));
 
-applySize();setTheme(store.get('theme','claro'));renderHome();route();
+applySize();setTheme(store.get('theme','claro'));setMode(mode);renderHome();route();
 addEventListener('hashchange',route);addEventListener('scroll',onScroll,{passive:true});
 </script>
 </body>
